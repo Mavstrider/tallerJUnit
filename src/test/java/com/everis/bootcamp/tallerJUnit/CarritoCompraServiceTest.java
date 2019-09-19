@@ -16,9 +16,15 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import com.everis.bootcamp.tallerjunit.Articulo;
+import com.everis.bootcamp.tallerjunit.BaseDeDatosService;
 import com.everis.bootcamp.tallerjunit.CarritoCompraService;
 
 /**
@@ -27,19 +33,23 @@ import com.everis.bootcamp.tallerjunit.CarritoCompraService;
  */
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@RunWith(MockitoJUnitRunner.class)
 public class CarritoCompraServiceTest {
 
 	List<Articulo> articulos = new ArrayList<Articulo>();
 
 	// CarritoCompraService ccs;
+	@InjectMocks
 	static CarritoCompraService carrito;
 	// Articulo art = new Articulo("Batatas", 2.2);
 	// Articulo art1 = new Articulo("Ba", 3.2);
-
+	@Mock
+	static BaseDeDatosService servicebd;
 	@BeforeClass
 	public static void testBeforeClass() {
 		System.out.println("Entramos en la Beforeclass");
 		carrito = new CarritoCompraService();
+		// servicebd = Mockito.mock(BaseDeDatosService.class);
 	}
 
 	@AfterClass
@@ -50,6 +60,8 @@ public class CarritoCompraServiceTest {
 	@Before
 	public void testBefore() {
 		System.out.println("Entramos en el Before");
+		Mockito.when(servicebd.findByIdJava8(1L)).thenReturn(new Articulo(1L, " mockeado id 1", 10D));
+		Mockito.when(servicebd.findByIdJava8(100L)).thenReturn(new Articulo(100L, "mockeadoid 100", 10D));
 
 	}
 
@@ -144,6 +156,7 @@ public class CarritoCompraServiceTest {
 		int sizeAfter = carrito.getArticulos().size();
 		assertEquals(sizeAntes, sizeAfter, 1);
 
+
 	}
 
 	@Test
@@ -172,5 +185,22 @@ public class CarritoCompraServiceTest {
 
 	}
 	
+	@Test
+	public void testAplicarDisconto() {
+		System.out.println("Aplicar Disconto");
+		double art = carrito.aplicarDescuento(1L, 5D);
+		System.out.println("Preço total -->" + art);
+		assertEquals(art, 9.5d, 0);
+
+	}
+
+	@Test
+	public void testAplicarDisconto100() {
+		System.out.println("Aplicar Disconto");
+		double art = carrito.aplicarDescuento(100L, 5D);
+		System.out.println("Preço total -->" + art);
+		assertEquals(art, 9.5d, 0);
+
+	}
 
 }
