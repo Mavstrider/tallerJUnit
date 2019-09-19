@@ -26,7 +26,7 @@ public class CarritoCompraService {
 		return precioTotal;
 	}
 	
-	public static Double calculadorDescuento(double precio, double porcentajeDescuento){
+	public Double calculadorDescuento(double precio, double porcentajeDescuento) {
 		return precio - (precio * (porcentajeDescuento/100));
 	}
 
